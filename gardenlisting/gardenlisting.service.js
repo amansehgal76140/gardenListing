@@ -1,4 +1,5 @@
 const connection = require("../db/db_connection");
+const { getCurrentGarden } = require("./gardenlisting.contoller");
 
 module.exports = {
   addGarden: (data, addMarriageGardenCallback) => {
@@ -75,6 +76,17 @@ module.exports = {
         if (err) return deleteGardenImagesCallback(err);
         console.log(fields);
         return deleteGardenImagesCallback(null, results);
+      }
+    );
+  },
+
+  getGardenDetails: (data, getCurrentGardenCallback) => {
+    connection.query(
+      `Select * From garden_listing where id = ?`,
+      [data.garden_id],
+      (err, results, fields) => {
+        if (err) return getCurrentGardenCallback(err);
+        return getCurrentGardenCallback(null, results);
       }
     );
   },

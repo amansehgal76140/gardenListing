@@ -5,6 +5,7 @@ const {
   deleteGarden,
   getGardens,
   deleteImages,
+  getGardenDetails,
 } = require("./gardenlisting.service");
 const MOMENT = require("moment");
 const fs = require("fs");
@@ -134,6 +135,22 @@ module.exports = {
       return res.status(200).json({
         success: 1,
         message: "Deleted Successfully",
+      });
+    });
+  },
+
+  getCurrentGarden: (req, res) => {
+    const data = req.params;
+    getGardenDetails(data, (err, results) => {
+      if (err) {
+        return res.status(500).json({
+          success: 0,
+          message: "Internal Server Error",
+        });
+      }
+      return res.status(200).json({
+        success: 1,
+        gardenDetails: results,
       });
     });
   },
