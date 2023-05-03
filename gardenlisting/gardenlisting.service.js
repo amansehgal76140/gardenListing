@@ -66,4 +66,16 @@ module.exports = {
       }
     );
   },
+
+  deleteImages: (data, deleteGardenImagesCallback) => {
+    connection.query(
+      `Delete from garden_images where image_name In(?)`,
+      [data.image_name],
+      (err, results, fields) => {
+        if (err) return deleteGardenImagesCallback(err);
+        console.log(fields);
+        return deleteGardenImagesCallback(null, results);
+      }
+    );
+  },
 };

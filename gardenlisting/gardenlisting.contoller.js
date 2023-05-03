@@ -4,8 +4,10 @@ const {
   getImages,
   deleteGarden,
   getGardens,
+  deleteImages,
 } = require("./gardenlisting.service");
 const MOMENT = require("moment");
+const fs = require("fs");
 
 module.exports = {
   addMarriageGarden: (req, res) => {
@@ -103,6 +105,35 @@ module.exports = {
       return res.status(200).json({
         success: 1,
         gardenDetails: results,
+      });
+    });
+  },
+
+  deleteGardenImages: (req, res) => {
+    const data = req.body;
+    deleteImages(data, (err, results) => {
+      if (err) {
+        return res.status(500).json({
+          success: 0,
+          message: "Bad Request",
+        });
+      }
+      data.image_name.map((imageName) => {
+        const path = __dirname + "/uploads/" + imageName;
+        if (fs.existsSync(path)) {
+          fs.unlink(path, (err) => {
+            if (err)
+              return res.status(500).json({
+                success: 0,
+                message: "File Not Exists",
+              });
+            console.log("File Deleted Successfully");
+          });
+        }
+      });
+      return res.status(200).json({
+        success: 1,
+        message: "Deleted Successfully",
       });
     });
   },
